@@ -17,12 +17,15 @@ genius = lyricsgenius.Genius(
 genius.skip_non_songs=True
 genius.remove_section_headers=True
 
-ARTIST_NAME = "Clipse"
-ALBUM_NAME = "Let God Sort Em Out"
+BASE_FOLDER = "albums"
+os.makedirs(BASE_FOLDER, exist_ok=True)
+
+ARTIST_NAME = "J Cole"
+ALBUM_NAME = "The Off-Season"
 
 album = genius.search_album(ALBUM_NAME, ARTIST_NAME)
 
-safe_album_folder = re.sub(r'[\\/*?:"<>| ]', "_", ALBUM_NAME)
+safe_album_folder = os.path.join(BASE_FOLDER, re.sub(r'[\\/*?:"<>| ]', "_", ALBUM_NAME))
 os.makedirs(safe_album_folder, exist_ok=True)
 
 for idx, track in enumerate(album.tracks, start=1):
