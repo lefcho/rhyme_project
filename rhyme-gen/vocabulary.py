@@ -15,7 +15,6 @@ def build_vocab(pairs, min_freq=1):
     # reserve special tokens
     words = SPECIAL_TOKENS + sorted(vocab)
     word2idx = {w: i for i, w in enumerate(words)}
-    print(word2idx)
     return word2idx, words
 
 

@@ -20,8 +20,8 @@ genius.remove_section_headers=True
 BASE_FOLDER = "albums"
 os.makedirs(BASE_FOLDER, exist_ok=True)
 
-ARTIST_NAME = "J Cole"
-ALBUM_NAME = "The Off-Season"
+ARTIST_NAME = "Kanye West"
+ALBUM_NAME = "The College Dropout"
 
 album = genius.search_album(ALBUM_NAME, ARTIST_NAME)
 
@@ -41,7 +41,6 @@ for idx, track in enumerate(album.tracks, start=1):
     filepath = os.path.join(safe_album_folder, filename)
 
     with open(filepath, "w", encoding="utf-8") as f:
-        f.write(f"{title}\n\n")
         f.write(lyrics)
 
     print(f"Wrote '{title}' -> {filepath}")

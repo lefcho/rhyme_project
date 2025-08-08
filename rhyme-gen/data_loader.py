@@ -5,13 +5,12 @@ import re
 
 def clean_line_tokens(line: str) -> str:
     """
-    Remove leading/trailing non-word chars from each token.
+    Remove leading/trailing non-word chars (excluding apostrophes) from each token.
     """
     tokens = line.split()
     cleaned = []
     for tok in tokens:
-        # Strip non-alphanumeric at start/end
-        tok = re.sub(r'^[^\w]+|[^\w]+$', '', tok)
+        tok = re.sub(r"^[^\w']+|[^\w']+$", '', tok)
         if tok:
             cleaned.append(tok)
     return ' '.join(cleaned)
@@ -25,7 +24,7 @@ def find_lyrics_files(base_dir: str) -> list:
     return glob.glob(pattern)
 
 
-def load_song_lines(filepath: str, max_words: int = 30) -> list:
+def load_song_lines(filepath: str, max_words = 30, min_words = 3) -> list:
     """
     Read a song file and return a list of cleaned, deduplicated lyric lines,
     each ending with an <eol> token.
@@ -43,8 +42,9 @@ def load_song_lines(filepath: str, max_words: int = 30) -> list:
             if line in seen:
                 continue
 
-            if len(line.split()) > max_words:
+            if len(line.split()) >= max_words or len(line.split()) <= min_words:
                 continue
+
             seen.add(line)
             
             # append end-of-line token
@@ -92,13 +92,3 @@ def prepare_dataset(pairs, word2idx):
     return inputs, targets
 
 
-# Example usage
-if __name__ == '__main__':
-    base_folder = 'albums'
-    pairs = build_line_pairs(base_folder)
-    print(f"Total line pairs: {len(pairs)}")
-    # Vocabulary and dataset
-    from vocabulary import build_vocab
-    word2idx, idx2word = build_vocab(pairs)
-    inputs, targets = prepare_dataset(pairs, word2idx)
-    print(f"Dataset sizes -> inputs: {len(inputs)}, targets: {len(targets)}")

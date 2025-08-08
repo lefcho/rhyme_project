@@ -1,4 +1,5 @@
 import pronouncing
+import re
 
 
 def get_rm_part(word):
@@ -18,17 +19,19 @@ def get_rm_part(word):
 
 def syllable_count(line: str) -> int:
     """
-    Count total syllables in a line.
+    Count total syllables in a line, after removing punctuation
     """
     total = 0
-
     for w in line.split():
-        phones = pronouncing.phones_for_word(w)
+        # remove all non-alphanumeric characters:
+        clean_w = re.sub(r"[^\w]", "", w.lower())
+        if not clean_w:
+            continue
+
+        phones = pronouncing.phones_for_word(clean_w)
         if phones:
             total += pronouncing.syllable_count(phones[0])
-
     return total
-
 
 def build_rhyme_map(lines: list) -> dict:
     """
@@ -38,7 +41,10 @@ def build_rhyme_map(lines: list) -> dict:
     next_id = 0
     for line in lines:
         tokens = line.split()
+
         last = tokens[-2] if tokens[-1] == '<eol>' else tokens[-1]
+
+            
         rm_part = get_rm_part(last)
 
         if rm_part not in rhyme_map:
@@ -47,12 +53,14 @@ def build_rhyme_map(lines: list) -> dict:
     return rhyme_map
 
 
-def rhyme_id(line: str, rhyme_map: dict) -> int:
+def get_rhyme_id(line: str, rhyme_map: dict) -> int:
     """
     Return the integer ID of the line's last word's rhyming part.
     """
     tokens = line.split()
+
     last = tokens[-2] if tokens[-1] == '<eol>' else tokens[-1]
+
 
     rm_part = get_rm_part(last)
 
@@ -66,12 +74,14 @@ def extract_features(pairs: list):
     prev_lines = [p for p, _ in pairs]
     rhyme_map = build_rhyme_map(prev_lines)
 
-    feats = []
+    syl_count = []
+    rhyme_id = []
     for prev, _ in pairs:
-        feats.append((syllable_count(prev), rhyme_id(prev, rhyme_map)))
-    
-    return feats, rhyme_map
+        syl_count.append(syllable_count(prev))
+        rhyme_id.append(get_rhyme_id(prev, rhyme_map))
 
-# print(syllable_count('And the drought will define a man when the well dries up <eol>'))
+    return syl_count, rhyme_id, rhyme_map
+
+# print(syllable_count("you stick wit it"))
 # build_rhyme_map(["'Cause I'm still paranoid to this running", "And it's nobody fault, I made the decisions I made"])
 
