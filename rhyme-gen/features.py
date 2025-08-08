@@ -2,6 +2,9 @@ import pronouncing
 
 
 def get_rm_part(word):
+    """
+    Extract the rhyming part of the word.
+    """
     phones = pronouncing.phones_for_word(word)
     if not phones:
         rm_part = word
@@ -15,7 +18,7 @@ def get_rm_part(word):
 
 def syllable_count(line: str) -> int:
     """
-    Count total syllables in a line using CMU dictionary.
+    Count total syllables in a line.
     """
     total = 0
 
@@ -58,7 +61,7 @@ def rhyme_id(line: str, rhyme_map: dict) -> int:
 
 def extract_features(pairs: list):
     """
-    For each (prev, next) pair, compute (syllable_count, rhyme_id) for prev.
+    For each pair, compute (syllable_count, rhyme_id) for prev.
     """
     prev_lines = [p for p, _ in pairs]
     rhyme_map = build_rhyme_map(prev_lines)

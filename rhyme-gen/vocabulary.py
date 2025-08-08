@@ -1,14 +1,14 @@
 from collections import Counter
 
 
-def build_vocab(lines, min_freq=1):
+def build_vocab(pairs, min_freq=1):
     SPECIAL_TOKENS = ['<pad>', '<unk>']
     """
-    Build word-to-index and index-to-word mappings from a list of tokenized lines.
+    Build word-to-index mappings from a list of lines.
     """
     freq = Counter()
-    for line in lines:
-        for w in line:
+    for pair in pairs:
+        for w in pair[0].split():
             freq[w] += 1
 
     vocab = [w for w, c in freq.items() if c >= min_freq]
@@ -19,8 +19,4 @@ def build_vocab(lines, min_freq=1):
     return word2idx, words
 
 
-def tokenize_line(line, word2idx):
-    """Convert a single line string into a list of token indices."""
-    tokens = line.split()
-    return [word2idx.get(tok, word2idx['<unk>']) for tok in tokens]
 

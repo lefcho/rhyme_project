@@ -4,7 +4,9 @@ import re
 
 
 def clean_line_tokens(line: str) -> str:
-    """Remove leading/trailing non-word chars from each token."""
+    """
+    Remove leading/trailing non-word chars from each token.
+    """
     tokens = line.split()
     cleaned = []
     for tok in tokens:
@@ -16,7 +18,9 @@ def clean_line_tokens(line: str) -> str:
 
 
 def find_lyrics_files(base_dir: str) -> list:
-
+    """
+    Extract all file paths.
+    """
     pattern = os.path.join(base_dir, '*', '*.txt')
     return glob.glob(pattern)
 
@@ -24,7 +28,7 @@ def find_lyrics_files(base_dir: str) -> list:
 def load_song_lines(filepath: str, max_words: int = 30) -> list:
     """
     Read a song file and return a list of cleaned, deduplicated lyric lines,
-    each terminated by an <eol> token.
+    each ending with an <eol> token.
     """
     seen = set()
     unique_lines = []
@@ -49,7 +53,8 @@ def load_song_lines(filepath: str, max_words: int = 30) -> list:
 
 def build_line_pairs(base_dir: str) -> list:
     """
-    Traverse all lyrics and build (prev_line, next_line) pairs within each song.
+    Traverse all lyrics and build (prev_line, next_line) 
+    pairs within each song.
     """
     pairs = []
     files = find_lyrics_files(base_dir)
@@ -66,10 +71,10 @@ def build_line_pairs(base_dir: str) -> list:
 
 def prepare_dataset(pairs, word2idx):
     """
-    Convert line pairs into input and target index sequences, padded to max length.
+    Convert line pairs into input and target index sequences, 
+    padded to max length (equal size).
     """
     tokenized = [(line1.split(), line2.split()) for line1, line2 in pairs]
-    # compute max lengths
     max_lenght = max(len(t1) for t1, _ in tokenized)
 
     inputs, targets = [], []
@@ -93,8 +98,7 @@ if __name__ == '__main__':
     pairs = build_line_pairs(base_folder)
     print(f"Total line pairs: {len(pairs)}")
     # Vocabulary and dataset
-    all_lines = [l.split() for pair in pairs for l in pair]
     from vocabulary import build_vocab
-    word2idx, idx2word = build_vocab(all_lines)
+    word2idx, idx2word = build_vocab(pairs)
     inputs, targets = prepare_dataset(pairs, word2idx)
     print(f"Dataset sizes -> inputs: {len(inputs)}, targets: {len(targets)}")
