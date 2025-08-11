@@ -35,7 +35,6 @@ def write_to_csv(
 
 
 def save_mappings(word2idx, idx2word, rhyme_map, vocab_path="vocab.json", rhyme_path="rhyme_map.pkl"):
-    # Save word2idx & idx2word as JSON
     with open(vocab_path, "w", encoding="utf-8") as f:
         json.dump({
             "word2idx": word2idx,

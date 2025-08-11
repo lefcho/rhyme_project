@@ -16,7 +16,6 @@ def get_rm_part(word):
     return rm_part
  
 
-
 def syllable_count(line: str) -> int:
     """
     Count total syllables in a line, after removing punctuation
@@ -32,6 +31,7 @@ def syllable_count(line: str) -> int:
         if phones:
             total += pronouncing.syllable_count(phones[0])
     return total
+
 
 def build_rhyme_map(lines: list) -> dict:
     """
@@ -81,6 +81,7 @@ def extract_features(pairs: list):
         rhyme_id.append(get_rhyme_id(prev, rhyme_map))
 
     return syl_count, rhyme_id, rhyme_map
+
 
 # print(syllable_count("you stick wit it"))
 # build_rhyme_map(["'Cause I'm still paranoid to this running", "And it's nobody fault, I made the decisions I made"])

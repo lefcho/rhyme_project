@@ -20,8 +20,8 @@ genius.remove_section_headers=True
 BASE_FOLDER = "albums"
 os.makedirs(BASE_FOLDER, exist_ok=True)
 
-ARTIST_NAME = "Kanye West"
-ALBUM_NAME = "The College Dropout"
+ARTIST_NAME = "Rakim"
+ALBUM_NAME = "Paid in Full"
 
 album = genius.search_album(ALBUM_NAME, ARTIST_NAME)
 
