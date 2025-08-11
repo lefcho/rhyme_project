@@ -17,20 +17,20 @@ LEARN_RATE = 1e-3
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Load vocab
+
 with open(VOCAB_PATH, "r", encoding="utf-8") as f:
     vocab = json.load(f)
 word2idx = vocab["word2idx"]
 vocab_size = len(word2idx)
 pad_idx = word2idx.get("<pad>")
 
-# Dataset / Loader
+
 dataset = RapLinesDataset(CSV_PATH)
 loader = torch.utils.data.DataLoader(
     dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=collate_fn
 )
 
-# Model
+
 model = NextLineModel(
     vocab_size=vocab_size,
     num_rhyme_ids=dataset.num_rhyme_ids,

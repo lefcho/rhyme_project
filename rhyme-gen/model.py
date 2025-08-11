@@ -114,17 +114,17 @@ class NextLineModel(nn.Module):
         """
         Teacher-forcing forward pass.
         """
-        # Encode previous line
+        # encode previous line
         h_enc, c_enc = self.encode(prev_seq)  # each: (num_layers, batch, hidden_dim)
 
-        # Build conditioned increments and add to encoder final states
+        # build conditioned increments and add to encoder final states
         h_cond, c_cond = self._condition_hidden(rhyme_ids, syllables)
         h_init = h_enc + h_cond
         c_init = c_enc + c_cond
         # initial state of the decoder
         hidden = (h_init, c_init)
 
-        # Decoder loop with teacher forcing
+        # decoder loop with teacher forcing
         input_tokens = next_seq[:, 0]  # first input token for each batch sample
         outputs = []
         max_len = next_seq.size(1)
